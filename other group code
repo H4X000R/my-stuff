@@ -1,0 +1,174 @@
+#!/usr/bin/env python
+
+#########################################################################
+# YAPTF V0.00001 Developed for Diamond House Inc. by The Lead Developer #
+#########################################################################
+
+# Some of these might need to be installed on the system seperately:
+import socket
+import requests
+import subprocess
+import robotparser
+import time
+
+# Features to be added: Extending the function to scan three of the most common ports (HTTP, FTP, SSH)
+# test
+banner = """                                                                                                                                                      
+             `:/osyyyyo+/                                                                                                                             
+         `/s/./hMMMMMMMMM/`ds-                                                                                                                        
+       :hMMMMMh/./hMMMMMMh yMMmo`                                                                                                                     
+     -dMMMMMMMMMMh/./hMMMM.:MMMMNo`                                                                                                                   
+    oMMMMMMNmhys+/-`  `/yNo mMMMMMm.                                                                                                                  
+   :yo+/:--:`            `- oMMMMMh`-::--        --------`     .---------    -------.`    `-----------   ---.    `---`   `-------.      ----------    
+  -oshdNMMN/                .MMMN+ oMMMMN`      :MMMMMMMMMd`   dMMMNNNNNd   /MMMMMMMMMh`  hNNNMMMMNNNy  .MMM/    oMMN`   dMMMMMMMMN+   .MMMNNNNNNo    
+  mMMMMMMd.                  yMd.`hMM+NMM+      hMMd  `yMMM-  :MMM:         dMMd  `dMMN`     :MMM:      sMMN`    mMMy   -MMM/  :MMMs   sMMm`          
+ .MMMMMMs`                   -o .mMN: hMMd     .MMMh++yNMMy   yMMMdhhhh/   -MMMdsydMho`      hMMd      `NMMo    /MMM.   yMMMyshNNy/   `NMMNhhhhh`     
+ -MMMMN/`s                     :NMMyo+dMMM-    sMMNdddhyo-   .MMMy+++++`   yMMNyydMMN:      .MMM/      +MMM.    dMMh   `NMMhyyNMMd    +MMNo++++/      
+  NMMd.:NM:                   +MMNddddmMMMo   `NMMo          sMMM:-----   .NMM+  -MMM+      sMMm       sMMM+.`:hMMm.   oMMN`  yMMM    mMMh-----.      
+  oMs`sMMMy                  yMMd`    `NMMm   +MMN`         `NMMMMMMMMy   oMMN`  /MMM:     `NMMo       `omMMMMMmh/     mMMs   dMMm   :MMMMMMMMM/      
+   -.dMMMMM```                 `.:/+`                                                                      ```                                        
+    yMMMMMM+ mh/`    .-:+oshdmMMMMN/                                                                                                                  
+     +NMMMMm sMMMh+.:yNMMMMMMMMMMd.                                                                                                                   
+      `sNMMM--MMMMMMd+.:yNMMMMMd:      Awesome Port Examiner Resource To Understand Remote Environments                                          
+         /yNs dMMMMMMMMd+.:ydo.                                                                                                                       
+            . :ydmmNNmdhs+`                                                                                                                           
+                                                                                                                                                  """
+
+
+def scanport(host, port):
+    """Attempt to connect to a port on a host to see if it is open
+    :param host: Host IP to scan
+    :param port: Port to scan
+    """
+    s = socket.socket()
+    try:
+        s.connect((host, port))
+    except socket.error:
+        s.close()
+        return False
+    s.close()
+    return True
+
+
+# Still a bit buggy, needs a bit of tweaking........
+
+def crackhouse():
+    """Bruteforce the password for titanium house"""
+    
+    print("Cracking in progress...")
+    for item in range(1000):
+        
+        if item < 100:
+            item = "0" + str(item)
+            if int(item) < 10:
+                item = "0" + str(item)
+        url = "http://creative.coventry.ac.uk/eh/web_ch4/welcome.php?" + "username=JoeSmith&" + "password=" + str(item)
+        r = requests.get(url)
+        if "incorrect" not in r.text:
+            print "Passcode {0} Ok".format(item)
+            return item     
+
+# Something eye catching/fun but in the same time usable would be perfect here. (CowSay?)
+
+def amazingMenu():
+    """ Display an amazing Banner and the Menu for the tool to instantly impress the users."""
+    print(banner)
+    print ('YAPTF: by DiamondHouse inc.')
+
+
+
+
+#This needs a bit more tweaking to get it working:
+
+def listRestricted():
+    """ Return the restricted folders from a webpage based on the robots.txt file. """
+    sites = ['www.google.com','www.coventry.ac.uk', 'www.yahoo.com']
+    
+    def getDenies(site):
+        """ Create a new robotparser instance and read the site's robots file"""
+        paths =[]
+        robot = robotparser.RobotFileParser()
+        robot.set_url("http://"+site+"/robots.txt")
+        robot.read()
+
+        print robot.entries
+        
+        # For each entry, look at the rule lines and add the path to paths if disallowed.
+        for entry in robot.entries:
+            for line in entry.rulelines:
+                not line.allowance and paths.append(line.path)
+        return set(paths)
+
+    for site in sites:
+        print "Denies for " +site
+        print "\t" + "\n\t".join(getDenies(site))
+        
+
+def identifyOUI(macaddress):
+    """This function should identify the manufacturer of a given device based on its MAC adress"""
+    # Load the Wireshark manufacturers database file from the disk and  search through it to return the manufacturer
+    
+    database = open("data.txt", "r")
+    for line in database:
+        if macaddress in line: print line
+    database.close()
+
+
+def generateReport():
+    """This function should take all the output from the selected tunctionality and save it to a file of some sort."""
+    date = time.strftime("%d/%m/%y" + "_" + "%H:%M") 
+    with open("Reporttest.txt", "w") as text_file:
+        text_file.write(banner)
+        text_file.write("\n")
+        text_file.write("\n")
+        text_file.write(       "+-----------------------------------------------------------------+")
+        text_file.write("\n" + "|                                                                 |")
+        text_file.write("\n" + "|    Passcode for TitaniumHouse: " + str(crackhouse()) + "               |")
+        text_file.write("\n" + "|                                                                 |")
+        text_file.write("\n" + "+-----------------------------------------------------------------+")
+        text_file.write("\n")
+        text_file.write("\n")
+        text_file.write(       "+-----------------------------------------------------------------+")
+        text_file.write("\n" + "|                                                                 |")
+        text_file.write("\n" + "|    A list of denies for  can be found at ... ...         |")
+        text_file.write("\n" + "|                                                                 |")
+        text_file.write("\n" + "+-----------------------------------------------------------------+")
+        address = raw_input("Address : ")
+        port = raw_input("Port : ")
+        text_file.write("\n")
+        text_file.write("\n")
+        text_file.write(       "+-----------------------------------------------------------------+")
+        text_file.write("\n" + "|                                                                 |")
+        text_file.write("\n" + "|   The port " + str(port) + " at ip " + str(address)  + "  returns " + str(scanport(str(address), int(port))) +  "             |")
+        text_file.write("\n" + "|                                                                 |")
+        text_file.write("\n" + "+-----------------------------------------------------------------+")
+        MAC = raw_input("MAC Address : ")
+        text_file.write("\n")
+        text_file.write("\n")
+        text_file.write(       "+-----------------------------------------------------------------+")
+        text_file.write("\n" + "|                                                                 |")
+        text_file.write("\n" + "|   The manufacterer of the device with MAC address  is " + "  |")
+        text_file.write("\n" + "|                                                                 |")
+        text_file.write("\n" + "+-----------------------------------------------------------------+")
+        text_file.close
+    print("Report generated and saved to file.")
+    
+
+    
+
+# Below I can test all the custom functionality that I am writing, just by calling the function
+
+if __name__ == "__main__":
+    amazingMenu()
+    print "Would you like to generate a report? Y/n"
+    reportq = raw_input()
+    if reportq == "":
+        reportq = "y"
+    if reportq == "n":
+        #listRestricted()
+        #identifyOUI("A4:18:75")
+        print scanport("127.0.0.1",8000)
+        #print crackhouse()
+        #print listrestricted
+    if reportq == "y":
+        generateReport()
